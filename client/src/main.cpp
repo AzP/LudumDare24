@@ -4,6 +4,7 @@
 #include <SDL_net.h>
 
 #include "player.h"
+#include "eventreceiver.h"
 
 using namespace std;
 
@@ -20,73 +21,8 @@ using namespace video;
 using namespace io;
 using namespace gui;
 
-bool keys[KEY_KEY_CODES_COUNT];
-IrrlichtDevice* device;
 static const int windowX = 800;
 static const int windowY = 600;
-bool quitGame = false;
-bool leftmousebutton = false;
-
-
-/*********
-  Event reciever. Handles all the mouse and keyboard inputs.
- *********/
-class MyEventReceiver : public IEventReceiver
-{ 
-public: 
-	virtual bool OnEvent(const SEvent& event) 
-	{ 
-		if(event.EventType == EET_KEY_INPUT_EVENT) 
-		{ 
-			keys[event.KeyInput.Key] = event.KeyInput.PressedDown; 
-
-			//In case of quit event
-			if (event.KeyInput.Key == KEY_KEY_Q)
-			{
-			}
-		} 
-		else if (event.EventType == EET_MOUSE_INPUT_EVENT) 
-		{ 
-			if( event.MouseInput.Event == EMIE_LMOUSE_PRESSED_DOWN)
-			{
-			}    
-			if( event.MouseInput.Event == EMIE_LMOUSE_LEFT_UP)
-			{
-			} 
-		}
-
-		if (event.EventType == EET_GUI_EVENT)
-		{
-			s32 id = event.GUIEvent.Caller->getID();
-			if (device == 0)
-			{
-				return false;
-			}    
-			switch(event.GUIEvent.EventType)
-			{
-
-				case EGET_BUTTON_CLICKED:
-
-					if (id == 101)
-					{
-						return true;
-					}
-
-					if (id == 102)
-					{
-						exit(0);
-						return true;
-					}
-					break;
-
-				default:
-					break;
-			}
-		}
-
-		return false; 
-	}    
-}; 
 
 int main(int argc, char* argv[])
 {
@@ -94,7 +30,7 @@ int main(int argc, char* argv[])
 
 	// Create device
 	const dimension2d<u32> windowDimensions(windowX, windowY);
-	device = createDevice(video::EDT_OPENGL, windowDimensions, 
+	IrrlichtDevice* device = createDevice(video::EDT_OPENGL, windowDimensions, 
 		32, false, false, true, &receiver); 
 	device->setResizable(false); 
 
@@ -108,12 +44,18 @@ int main(int argc, char* argv[])
 	video::IVideoDriver* driver = device->getVideoDriver();
 	scene::ISceneManager* smgr = device->getSceneManager();
 
+	gui::IGUIFont* font = device->getGUIEnvironment()->getBuiltInFont();
+	gui::IGUIFont* font2 =
+		device->getGUIEnvironment()->getFont("../media/fonthaettenschweiler.bmp");
+
+
 	/*************
 	  Create the camera
 	 *************/
-	scene::ICameraSceneNode *camera = device->getSceneManager()->addCameraSceneNode();
+	scene::ICameraSceneNode *camera = smgr->addCameraSceneNode();
 	camera->setFOV(PI/2.0f);
 	scene::ISceneNode *cameraLookAtNode = smgr->addEmptySceneNode(); //node the camera is set to look at
+	camera->setPosition(core::vector3df(0.0f,0.0f,-15.0f));
 
 	/***********************
 	  Add the level and collision
@@ -130,26 +72,30 @@ int main(int argc, char* argv[])
 	/**********
 	  Creates the player
 	 *********/
+	CPlayer player = CPlayer(400, 300, device);
+
+	driver->getMaterial2D().TextureLayer[0].BilinearFilter=true;
+	driver->getMaterial2D().AntiAliasing=video::EAAM_FULL_BASIC;
 
 	//Create a timer to keep track of time
 	ITimer *timekeeper = device->getTimer(); 
-	int lasttime = timekeeper->getRealTime();
-
+	int lasttime = timekeeper->getTime();
 
 	/************
 	  Add lights
 	 ************/
-	smgr->addLightSceneNode(0, core::vector3df(0,0,0),
-		video::SColorf(1.0f,0.9f,0.7f,1.0f),
-		1000.0f);
-	smgr->addLightSceneNode(0, core::vector3df(0,-400,0),
-		video::SColorf(0.2f,0.4f,0.5f,1.0f),
-		1000.0f);
-
+	/*
+	   smgr->addLightSceneNode(0, core::vector3df(0,0,0),
+	   video::SColorf(1.0f,0.9f,0.7f,1.0f),
+	   1000.0f);
+	   smgr->addLightSceneNode(0, core::vector3df(0,-400,0),
+	   video::SColorf(0.2f,0.4f,0.5f,1.0f),
+	   1000.0f);
+	 */
 	/************
 	 * Create various variables used in gameplay
 	 ************/
-	float frametime;
+	float frametime = 0;
 
 #ifdef IRRKLANG
 	irrklang::vec3df* sndPos = new irrklang::vec3df();
@@ -157,24 +103,45 @@ int main(int argc, char* argv[])
 
 	cerr <<"starting main rendering loop " <<endl;
 	int lastFPS = -1;
-	leftmousebutton = false;
 	while(device->run())
 	{
 		if (device->isWindowActive())
 		{
+			player.update(receiver.getKeys(), frametime);
 			driver->beginScene(true, true, 0);
 			smgr->drawAll();
+			driver->draw2DImage(player.getSprite(), position2d<s32>(player.getPosX(),player.getPosY()));
 			driver->endScene();
 
 			int fps = driver->getFPS();
-			frametime = (float)(timekeeper->getRealTime() - lasttime)/1000.0; 
-			lasttime = timekeeper->getRealTime();
+			frametime = (float)(timekeeper->getTime() - lasttime)/1000.0; 
+			lasttime = timekeeper->getTime();
 
-			//if (quitGame)
+			if (receiver.isKeyDown(KEY_KEY_Q))
 			{
 				break; //Then exit the loop
 			}
-
+			//draw some text
+			if (font)
+			{
+				core::stringw str = L"Alone [";
+				str += driver->getName();
+				str += "] FPS:";
+				str += fps;
+				font->draw(str,
+					core::rect<s32>(130,10,300,50),
+					video::SColor(255,255,255,255));
+			}
+			if (font2)
+			{
+				core::stringw str = L"Alone [";
+				str += driver->getName();
+				str += "] FPS:";
+				str += fps;
+				font->draw(str,
+					core::rect<s32>(130,40,300,50),
+					video::SColor(255,255,255,255));
+			}
 			if (lastFPS != fps)
 			{
 				core::stringw str = L"Ludum Dare 48 [";
@@ -186,6 +153,7 @@ int main(int argc, char* argv[])
 				lastFPS = fps;
 			}
 		}
+		camera->updateAbsolutePosition();
 	}
 
 	device->closeDevice();
