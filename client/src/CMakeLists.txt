@@ -62,6 +62,7 @@ link_libraries( LudumDare48
 
 set(sourcefiles
 	main.cpp
+	player.cpp
 	)
 
 set (CMAKE_BUILD_TYPE debug)

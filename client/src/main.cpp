@@ -3,6 +3,8 @@
 #include <SDL.h>
 #include <SDL_net.h>
 
+#include "player.h"
+
 using namespace std;
 
 #ifdef _IRR_WINDOWS_
@@ -88,12 +90,12 @@ public:
 
 int main(int argc, char* argv[])
 {
-
 	MyEventReceiver receiver; 
 
 	// Create device
 	const dimension2d<u32> windowDimensions(windowX, windowY);
-	device = createDevice (video::EDT_OPENGL, windowDimensions, 32, false, false, true, &receiver); 
+	device = createDevice(video::EDT_OPENGL, windowDimensions, 
+		32, false, false, true, &receiver); 
 	device->setResizable(false); 
 
 	// Check if device could be created. If not, terminate.
