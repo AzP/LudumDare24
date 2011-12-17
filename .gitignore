@@ -1,8 +1,11 @@
+#CMake
 CMakeCache.txt
 CMakeFiles
 Makefile
 cmake_install.cmake
 install_manifest.txt
+CMakeTmp/
+
 #Visual Studio files
 *.[Oo]bj
 *.user

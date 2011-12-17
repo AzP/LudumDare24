@@ -18,10 +18,17 @@ using namespace video;
 using namespace io;
 using namespace gui;
 
+bool keys[KEY_KEY_CODES_COUNT];
+IrrlichtDevice* device;
+static const int windowX = 800;
+static const int windowY = 600;
+bool quitGame = false;
+bool leftmousebutton = false;
+
+
 /*********
   Event reciever. Handles all the mouse and keyboard inputs.
  *********/
-
 class MyEventReceiver : public IEventReceiver
 { 
 public: 
@@ -140,6 +147,7 @@ int main(int argc, char* argv[])
 	/************
 	 * Create various variables used in gameplay
 	 ************/
+	float frametime;
 
 #ifdef IRRKLANG
 	irrklang::vec3df* sndPos = new irrklang::vec3df();
@@ -156,7 +164,11 @@ int main(int argc, char* argv[])
 			smgr->drawAll();
 			driver->endScene();
 
-			if (quitGame)
+			int fps = driver->getFPS();
+			frametime = (float)(timekeeper->getRealTime() - lasttime)/1000.0; 
+			lasttime = timekeeper->getRealTime();
+
+			//if (quitGame)
 			{
 				break; //Then exit the loop
 			}

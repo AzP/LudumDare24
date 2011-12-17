@@ -44,7 +44,7 @@ link_directories(
 	/usr/local/lib/
 )
 
-link_libraries( subspacebattle
+link_libraries( LudumDare48
 	${SDL_LIBRARY}
 	${SDLNET_LIBRARY}
 	${SDLSOUND_LIBRARIES}
@@ -61,22 +61,9 @@ link_libraries( subspacebattle
 	)
 
 set(sourcefiles
-	ammo.cpp
-	audio.cpp
-	#audioIK.cpp
-	client.cpp
-	colors.cpp
-	hud.cpp
-	level.cpp
 	main.cpp
-	player.cpp
-	radar.cpp
-	score.cpp
-	ship.cpp
-	shipsControl.cpp
-	shot.cpp
 	)
 
 set (CMAKE_BUILD_TYPE debug)
-add_executable(subspacebattle ${sourcefiles})
-install_programs(TARGETS subspacebattle DESTINATION subspacebattle/bin)
+add_executable(LudumDare48 ${sourcefiles})
+install_programs(TARGETS LudumDare48 DESTINATION LudumDare48/bin)

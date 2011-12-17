@@ -1,4 +1,4 @@
-Subspace Battle - source release 0.3
+LUDUM DARE #22
 
 This software depends on the following packages:
 CMake (http://www.cmake.com)
@@ -11,7 +11,6 @@ After that is done, please run:
 > make
 
 Hopefully the compile will go well, and you can
-find the executables under client/bin and 
-server/bin
+find the executables under client/bin
 
 Peter
