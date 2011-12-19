@@ -2,8 +2,10 @@
 #include <iostream>
 #include <SDL.h>
 #include <SDL_net.h>
+#include <cassert>
 
 #include "player.h"
+#include "level.h"
 #include "eventreceiver.h"
 
 using namespace std;
@@ -24,6 +26,30 @@ using namespace gui;
 static const int windowX = 800;
 static const int windowY = 600;
 
+void updateCamera(irr::scene::ICameraSceneNode *camera, 
+	irr::scene::ISceneNode *node,  
+	irr::core::vector3df offset) 
+{ 
+	irr::core::matrix4 m; 
+	m.setRotationDegrees(node->getRotation()); 
+
+	irr::core::vector3df frv = irr::core::vector3df (0.0f, 0.0f, 1.0f); 
+	m.transformVect(frv); 
+
+	irr::core::vector3df upv = irr::core::vector3df (0.0f, 1.0f, 0.0f); 
+	m.transformVect(upv); 
+
+	m.transformVect(offset); 
+
+	offset += node->getPosition(); 
+	camera->setPosition(offset); 
+
+	camera->setUpVector(upv); 
+
+	offset += frv; 
+	camera->setTarget(offset); 
+} 
+
 int main(int argc, char* argv[])
 {
 	MyEventReceiver receiver; 
@@ -31,7 +57,7 @@ int main(int argc, char* argv[])
 	// Create device
 	const dimension2d<u32> windowDimensions(windowX, windowY);
 	IrrlichtDevice* device = createDevice(video::EDT_OPENGL, windowDimensions, 
-		32, false, false, true, &receiver); 
+		32, false, true, true, &receiver); 
 	device->setResizable(false); 
 
 	// Check if device could be created. If not, terminate.
@@ -44,10 +70,9 @@ int main(int argc, char* argv[])
 	video::IVideoDriver* driver = device->getVideoDriver();
 	scene::ISceneManager* smgr = device->getSceneManager();
 
-	gui::IGUIFont* font = device->getGUIEnvironment()->getBuiltInFont();
-	gui::IGUIFont* font2 =
-		device->getGUIEnvironment()->getFont("../media/fonthaettenschweiler.bmp");
-
+	gui::IGUIEnvironment* env = device->getGUIEnvironment();
+	gui::IGUIFont* font = env->getFont("../media/fonthaettenschweiler.bmp");
+	assert(font);
 
 	/*************
 	  Create the camera
@@ -57,9 +82,18 @@ int main(int argc, char* argv[])
 	scene::ISceneNode *cameraLookAtNode = smgr->addEmptySceneNode(); //node the camera is set to look at
 	camera->setPosition(core::vector3df(0.0f,0.0f,-15.0f));
 
+	/************
+	 * Set up fog
+	 ************/
+	driver->setFog(video::SColor(30,125,125,138), video::EFT_FOG_EXP, 50.f, 100.f, .01f, true, true);
+
 	/***********************
 	  Add the level and collision
 	 ***********************/
+	CLevel level(driver, smgr);
+
+	//Creates the player
+	CPlayer player = CPlayer(0, 0, device, level.getTriangleSelector());
 
 	/*******************
 	  Creates the other players
@@ -68,12 +102,6 @@ int main(int argc, char* argv[])
 	/************
 	  Add the gui
 	 ************/
-
-	/**********
-	  Creates the player
-	 *********/
-	CPlayer player = CPlayer(400, 300, device);
-
 	driver->getMaterial2D().TextureLayer[0].BilinearFilter=true;
 	driver->getMaterial2D().AntiAliasing=video::EAAM_FULL_BASIC;
 
@@ -82,20 +110,48 @@ int main(int argc, char* argv[])
 	int lasttime = timekeeper->getTime();
 
 	/************
-	  Add lights
+	  Add light and attatch to player
 	 ************/
-	/*
-	   smgr->addLightSceneNode(0, core::vector3df(0,0,0),
-	   video::SColorf(1.0f,0.9f,0.7f,1.0f),
-	   1000.0f);
-	   smgr->addLightSceneNode(0, core::vector3df(0,-400,0),
-	   video::SColorf(0.2f,0.4f,0.5f,1.0f),
-	   1000.0f);
-	 */
+	scene::IVolumeLightSceneNode* playerVolumeLight =
+		smgr->addVolumeLightSceneNode(player.getSceneNode(), -1);
+	scene::ILightSceneNode* playerLight =
+		smgr->addLightSceneNode(player.getSceneNode(), player.getRot() + vector3df(0,0,-10.0f),
+			video::SColorf(1.0f,1.0f,1.0f,1.0f), 50.0f);
+	// attach billboard to the light
+	scene::ISceneNode* bill =
+		smgr->addBillboardSceneNode(playerLight, core::dimension2d<f32>(30, 30));
+	bill->setMaterialFlag(video::EMF_LIGHTING, false);
+	bill->setMaterialFlag(video::EMF_FOG_ENABLE, false);
+	bill->setMaterialFlag(video::EMF_ZWRITE_ENABLE, true);
+	bill->setMaterialType(video::EMT_TRANSPARENT_ADD_COLOR);
+	bill->setMaterialTexture(0, driver->getTexture("../media/particlered.bmp"));
+
+	//vector3d(horiz, height, vert);
+	scene::ILightSceneNode* light2 =
+		smgr->addLightSceneNode(level.getSceneNode(), core::vector3df(0,40,100),
+			video::SColorf(1.0f,1.0f,1.0f,1.0f), 70.0f);
+	bill = smgr->addBillboardSceneNode(light2, core::dimension2d<f32>(20, 20));
+	bill->setMaterialFlag(video::EMF_LIGHTING, false);
+	bill->setMaterialFlag(video::EMF_ZWRITE_ENABLE, false);
+	bill->setMaterialType(video::EMT_TRANSPARENT_ADD_COLOR);
+	bill->setMaterialTexture(0, driver->getTexture("../media/particlewhite.bmp"));
+
+	scene::ILightSceneNode* light3 =
+		smgr->addLightSceneNode(level.getSceneNode(), core::vector3df(0,40,-100),
+			video::SColorf(1.0f,1.0f,1.0f,1.0f), 70.0f);
+	bill = smgr->addBillboardSceneNode(light3, core::dimension2d<f32>(20, 20));
+	bill->setMaterialFlag(video::EMF_LIGHTING, false);
+	bill->setMaterialFlag(video::EMF_ZWRITE_ENABLE, false);
+	bill->setMaterialType(video::EMT_TRANSPARENT_ADD_COLOR);
+	bill->setMaterialTexture(0, driver->getTexture("../media/particlewhite.bmp"));
 	/************
 	 * Create various variables used in gameplay
 	 ************/
+	bool quit;
 	float frametime = 0;
+	bool debugCamera = false;
+	vector3df cameraPosition(0.0f,0.0f,-2.0f);
+	vector3df cameraRotation(0.0f,0.0f,0.0f);
 
 #ifdef IRRKLANG
 	irrklang::vec3df* sndPos = new irrklang::vec3df();
@@ -107,20 +163,31 @@ int main(int argc, char* argv[])
 	{
 		if (device->isWindowActive())
 		{
+			quit = receiver.processInput(cameraPosition, cameraRotation, debugCamera);
+
 			player.update(receiver.getKeys(), frametime);
-			driver->beginScene(true, true, 0);
+
+			if (debugCamera)
+			{
+				cameraLookAtNode->setPosition(cameraPosition);
+				cameraLookAtNode->setRotation(cameraRotation);
+			}
+			else
+			{
+				cameraLookAtNode->setRotation(cameraRotation);
+				cameraLookAtNode->setPosition(player.getPos());
+				cameraPosition = player.getPos();
+			}
+			updateCamera(camera, cameraLookAtNode, vector3df(0.0f,0.0f,-50.0f));
+			camera->updateAbsolutePosition();
+			driver->beginScene(true, true, SColor(255,100,101,140));
 			smgr->drawAll();
-			driver->draw2DImage(player.getSprite(), position2d<s32>(player.getPosX(),player.getPosY()));
-			driver->endScene();
+			env->drawAll();
 
 			int fps = driver->getFPS();
 			frametime = (float)(timekeeper->getTime() - lasttime)/1000.0; 
 			lasttime = timekeeper->getTime();
 
-			if (receiver.isKeyDown(KEY_KEY_Q))
-			{
-				break; //Then exit the loop
-			}
 			//draw some text
 			if (font)
 			{
@@ -128,20 +195,27 @@ int main(int argc, char* argv[])
 				str += driver->getName();
 				str += "] FPS:";
 				str += fps;
+				str += "\nCameraRotation: ";
+				str += cameraRotation.X;
+				str += ", ";
+				str += cameraRotation.Y;
+				str += ", ";
+				str += cameraRotation.Z;
+				str += "\nCameraPosition: ";
+				str += cameraPosition.X;
+				str += ", ";
+				str += cameraPosition.Y;
+				str += ", ";
+				str += cameraPosition.Z;
+				str += "\nDebug camera:";
+				str += debugCamera;
 				font->draw(str,
-					core::rect<s32>(130,10,300,50),
+					core::rect<s32>(30,10,300,90),
 					video::SColor(255,255,255,255));
 			}
-			if (font2)
-			{
-				core::stringw str = L"Alone [";
-				str += driver->getName();
-				str += "] FPS:";
-				str += fps;
-				font->draw(str,
-					core::rect<s32>(130,40,300,50),
-					video::SColor(255,255,255,255));
-			}
+
+			driver->endScene();
+
 			if (lastFPS != fps)
 			{
 				core::stringw str = L"Ludum Dare 48 [";
@@ -152,8 +226,9 @@ int main(int argc, char* argv[])
 				device->setWindowCaption(str.c_str());
 				lastFPS = fps;
 			}
+			if (quit)
+				break; //Break the loop
 		}
-		camera->updateAbsolutePosition();
 	}
 
 	device->closeDevice();
@@ -161,3 +236,4 @@ int main(int argc, char* argv[])
 
 	return 0;
 }
+
