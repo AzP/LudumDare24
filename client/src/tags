@@ -1,0 +1,53 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.8	//
+BUILDINGHIT	include/constants.h	/^	BUILDINGHIT = -1,$/;"	e	enum:SHOTCOLLISION
+CONSTANTS_H	include/constants.h	4;"	d
+CPlayer	include/player.h	/^class CPlayer {$/;"	c
+CPlayer	player.cpp	/^CPlayer::CPlayer()$/;"	f	class:CPlayer
+CPlayer	player.cpp	/^CPlayer::CPlayer(int posX, int posY, IrrlichtDevice *device)$/;"	f	class:CPlayer
+DEATH	include/constants.h	/^	DEATH,$/;"	e	enum:PACKETTYPE
+GAMEPORT	include/constants.h	/^static const int GAMEPORT = 8200; \/\/Translated to 2080 in Big Endian$/;"	v
+HANDSHAKE	include/constants.h	/^	HANDSHAKE, $/;"	e	enum:PACKETTYPE
+KeyIsDown	eventreceiver.cpp	/^	bool KeyIsDown[KEY_KEY_CODES_COUNT];$/;"	m	class:MyEventReceiver	file:
+MyEventReceiver	eventreceiver.cpp	/^class MyEventReceiver : public IEventReceiver$/;"	c	file:
+MyEventReceiver	include/eventreceiver.h	/^	MyEventReceiver()$/;"	f	class:MyEventReceiver
+MyEventReceiver	include/eventreceiver.h	/^class MyEventReceiver : public IEventReceiver$/;"	c
+NOHIT	include/constants.h	/^	NOHIT = -2,$/;"	e	enum:SHOTCOLLISION
+NOTHING	include/constants.h	/^	NOTHING = -1,$/;"	e	enum:PACKETTYPE
+OnEvent	eventreceiver.cpp	/^	virtual bool OnEvent(const SEvent& event) $/;"	f	class:MyEventReceiver
+OnEvent	include/eventreceiver.h	/^	virtual bool OnEvent(const SEvent& event) $/;"	f	class:MyEventReceiver
+PACKETTYPE	include/constants.h	/^enum PACKETTYPE {$/;"	g
+PLAYER	include/constants.h	/^	PLAYER,$/;"	e	enum:PACKETTYPE
+PLAYERHIT	include/constants.h	/^	PLAYERHIT$/;"	e	enum:SHOTCOLLISION
+QUIT	include/constants.h	/^	QUIT$/;"	e	enum:PACKETTYPE
+REQUEST	include/constants.h	/^	REQUEST, $/;"	e	enum:PACKETTYPE
+SHIP	include/constants.h	/^	SHIP,$/;"	e	enum:PACKETTYPE
+SHOT	include/constants.h	/^	SHOT,$/;"	e	enum:PACKETTYPE
+SHOTCOLLISION	include/constants.h	/^enum SHOTCOLLISION {$/;"	g
+SPEED	include/player.h	/^	static const int SPEED = 30;$/;"	m	class:CPlayer
+_SND_TYPE_EXPL	include/constants.h	/^static const int _SND_TYPE_EXPL = 1;$/;"	v
+_SND_TYPE_SHOT	include/constants.h	/^static const int _SND_TYPE_SHOT = 0;$/;"	v
+_SND_TYPE_TURB	include/constants.h	/^static const int _SND_TYPE_TURB = 2;$/;"	v
+driver	include/player.h	/^	IVideoDriver* driver;$/;"	m	class:CPlayer
+getKeys	include/eventreceiver.h	/^	virtual const bool* getKeys() const$/;"	f	class:MyEventReceiver
+getPosX	include/player.h	/^	int getPosX() const { return mPosX; };$/;"	f	class:CPlayer
+getPosY	include/player.h	/^	int getPosY() const { return mPosY; };$/;"	f	class:CPlayer
+getSprite	include/player.h	/^	ITexture* getSprite() const { return mSprite; };$/;"	f	class:CPlayer
+isKeyDown	include/eventreceiver.h	/^	virtual bool isKeyDown(EKEY_CODE keyCode) const$/;"	f	class:MyEventReceiver
+mDirection	include/player.h	/^	vector3df mDirection;$/;"	m	class:CPlayer
+mKeyIsDown	include/eventreceiver.h	/^	bool mKeyIsDown[KEY_KEY_CODES_COUNT];$/;"	m	class:MyEventReceiver
+mNode	include/player.h	/^	scene::ISceneNode* mNode;$/;"	m	class:CPlayer
+mPosX	include/player.h	/^	int mPosX, mPosY;$/;"	m	class:CPlayer
+mPosY	include/player.h	/^	int mPosX, mPosY;$/;"	m	class:CPlayer
+mSprite	include/player.h	/^	ITexture* mSprite;$/;"	m	class:CPlayer
+main	main.cpp	/^int main(int argc, char* argv[])$/;"	f
+move	player.cpp	/^void CPlayer::move(core::vector3df vel)$/;"	f	class:CPlayer
+rotate	player.cpp	/^void CPlayer::rotate(core::vector3df rot)$/;"	f	class:CPlayer
+update	player.cpp	/^void CPlayer::update(const bool* keys, const float frametime)$/;"	f	class:CPlayer
+windowX	main.cpp	/^static const int windowX = 800;$/;"	v	file:
+windowY	main.cpp	/^static const int windowY = 600;$/;"	v	file:
+~CPlayer	player.cpp	/^CPlayer::~CPlayer()$/;"	f	class:CPlayer
