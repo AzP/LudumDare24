@@ -37,13 +37,11 @@ void updateCamera(irr::scene::ICameraSceneNode *camera,
 	m.transformVect(upVector); 
 
 	m.transformVect(offset); 
-	offset += lookAtNode->getPosition(); 
-	camera->setPosition(offset); 
-
-	camera->setUpVector(upVector); 
-
+	//offset += lookAtNode->getPosition(); 
 	offset += forwardVector; 
 	camera->setTarget(offset); 
+	camera->setUpVector(upVector); 
+	lookAtNode->setPosition(offset);
 }
 
 void printDebug(CDevice& device, int fps, bool debugCamera,
@@ -136,12 +134,11 @@ int main(int argc, char* argv[])
 			}
 			else
 			{
-				cameraLookAtNode->setPosition(player.getPos());
+				//cameraLookAtNode->setPosition(player.getPos());
 				cameraLookAtNode->setRotation(cameraRotation);
 				cameraPosition = player.getPos();
 			}
-			updateCamera(cameraLookAtNode, deviceSetup.getCameraNode(), vector3df(0.0f,0.0f,25.0f));
-			//updateCamera(deviceSetup.getCameraNode(), cameraLookAtNode, vector3df(0.0f,0.0f,25.0f));
+			updateCamera(deviceSetup.getCameraNode(), cameraLookAtNode, vector3df(0.0f,0.0f,25.0f));
 			deviceSetup.getCameraNode()->updateAbsolutePosition();
 			deviceSetup.getDriver()->beginScene(true, true, SColor(255,100,101,140));
 			deviceSetup.getSceneManager()->drawAll();
@@ -176,7 +173,6 @@ void createLight(ISceneManager* sceneMgr, ISceneNode* sceneNode, bool fog, bool 
 	// Create billboard object and attach light to it
 	scene::ISceneNode* bill =
 		sceneMgr->addBillboardSceneNode(light, core::dimension2d<f32>(30, 30));
-	bill = sceneMgr->addBillboardSceneNode(light, core::dimension2d<f32>(20, 20));
 	bill->setMaterialFlag(video::EMF_LIGHTING, false);
 	bill->setMaterialFlag(video::EMF_FOG_ENABLE, fog);
 	bill->setMaterialFlag(video::EMF_ZWRITE_ENABLE, zwrite);

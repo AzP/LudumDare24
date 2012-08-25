@@ -91,31 +91,31 @@ public:
 			mKeyIsDown[i] = false;
 	}
 
-	virtual bool processInput(vector3df& cameraposition, vector3df& camerarotation, bool& debugCamera)
+	virtual bool processInput(vector3df& cameraPosition, vector3df& cameraRotation, bool& debugCamera)
 	{
 		if (debugCamera)
 		{
 			if (isKeyDown(KEY_KEY_F))
-				cameraposition.Z += 5; //Forward
+				cameraPosition.Z += 5; //Forward
 			if (isKeyDown(KEY_KEY_D))
-				cameraposition.Z -= 5; //Backward
+				cameraPosition.Z -= 5; //Backward
 			if (isKeyDown(KEY_KEY_C))
-				cameraposition.Y += 1; //Up
+				cameraPosition.Y += 1; //Up
 			if (isKeyDown(KEY_KEY_T))
-				cameraposition.Y -= 1; //Down
+				cameraPosition.Y -= 1; //Down
 			if (isKeyDown(KEY_KEY_N))
-				cameraposition.X += 1; //Right
+				cameraPosition.X += 1; //Right
 			if (isKeyDown(KEY_KEY_H))
-				cameraposition.X -= 1; //Left
+				cameraPosition.X -= 1; //Left
 		}
 		if (isKeyDown(KEY_UP))
-			camerarotation.X += 1; //Up
+			cameraRotation.X -= 1; //Up
 		if (isKeyDown(KEY_DOWN))
-			camerarotation.X -= 1; //Down
+			cameraRotation.X += 1; //Down
 		if (isKeyDown(KEY_RIGHT))
-			camerarotation.Z += 1; //Right
+			cameraRotation.Z -= 1; //Right
 		if (isKeyDown(KEY_LEFT))
-			camerarotation.Z -= 1; //Left
+			cameraRotation.Z += 1; //Left
 		if (isKeyDown(KEY_KEY_D))
 		{
 			if(!wasPressedLastFrame)
@@ -124,6 +124,12 @@ public:
 		}
 		else
 			wasPressedLastFrame = false;
+
+		if (cameraRotation.X > -40)
+			cameraRotation.X = -40;
+		if (cameraRotation.X < -140)
+			cameraRotation.X = -140;
+
 
 		if (isKeyDown(KEY_KEY_Q))
 			return true; //Return true to quit

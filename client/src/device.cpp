@@ -51,9 +51,14 @@ void CDevice::setupIrrlicht(MyEventReceiver& receiver)
 	 *************/
 	m_cameraNode = m_sceneMgr->addCameraSceneNode();
 	m_cameraNode->setFOV(PI/2.0f);
-	m_cameraNode->setPosition(core::vector3df(0.0f,0.0f, 0.0f));
+	m_cameraNode->setPosition(core::vector3df(0.0f,0.0f, -10.0f));
 	m_cameraLookAtNode = m_sceneMgr->addEmptySceneNode(); //node the camera is set to look at
 
+	scene::ISceneNode* bill = m_sceneMgr->addBillboardSceneNode(m_cameraLookAtNode, core::dimension2d<f32>(30, 30));
+	bill->setMaterialFlag(video::EMF_LIGHTING, false);
+	bill->setMaterialFlag(video::EMF_ZWRITE_ENABLE, false);
+	bill->setMaterialType(video::EMT_TRANSPARENT_ADD_COLOR);
+	bill->setMaterialTexture(0, m_driver->getTexture("../media/particlewhite.bmp"));
 	/************
 	 * Set up fog
 	 ************/
