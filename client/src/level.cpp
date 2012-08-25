@@ -29,8 +29,8 @@ CLevel::CLevel(IVideoDriver* driver, ISceneManager* smgr) : mSmgr(smgr)
 		mGround->getMaterial(0).getTextureMatrix(0).setTextureScale(20.f, 20.f);
 		mGround->getMaterial(0).getTextureMatrix(1).setTextureScale(20.f, 20.f);
 
-		mGround->setMaterialFlag(video::EMF_FOG_ENABLE, true);
-		mGround->setMaterialFlag(video::EMF_LIGHTING, true);
+		mGround->setMaterialFlag(video::EMF_FOG_ENABLE, false);
+		mGround->setMaterialFlag(video::EMF_LIGHTING, false);
 		mGround->setMaterialFlag(video::EMF_NORMALIZE_NORMALS, true);
 		mGround->setMaterialType(video::EMT_PARALLAX_MAP_SOLID);
 		// adjust height for parallax effect

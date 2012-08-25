@@ -64,7 +64,7 @@ set(sourcefiles
 	main.cpp
 	player.cpp
 	level.cpp
-	device.h
+	device.cpp
 	)
 
 set (CMAKE_BUILD_TYPE debug)

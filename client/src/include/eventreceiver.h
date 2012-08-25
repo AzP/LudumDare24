@@ -1,7 +1,17 @@
-#include <iostream>
+#ifndef EVENTRECEIVER_H
+#define EVENTRECEIVER_H
+
 #include <irrlicht.h>
 
 using namespace std;
+using namespace std;
+using namespace irr;
+using namespace irr::core;
+using namespace irr::scene;
+using namespace irr::video;
+using namespace irr::gui;
+using namespace irr::io;
+
 
 /**********
  * Event reciever. Handles all the mouse and keyboard inputs.
@@ -117,5 +127,4 @@ bool mKeyIsDown[KEY_KEY_CODES_COUNT];
 bool wasPressedLastFrame;
 }; 
 
-
-
+#endif

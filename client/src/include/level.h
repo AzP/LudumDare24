@@ -1,4 +1,5 @@
-#ifndef PLAYER_H
+#ifndef LEVEL_H
+#define LEVEL_H
 
 #include <iostream>
 #include <irrlicht.h>
