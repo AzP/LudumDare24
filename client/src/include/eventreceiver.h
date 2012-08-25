@@ -12,7 +12,6 @@ using namespace irr::video;
 using namespace irr::gui;
 using namespace irr::io;
 
-
 /**********
  * Event reciever. Handles all the mouse and keyboard inputs.
  **********/
@@ -23,6 +22,49 @@ public:
 	{ 
 		if(event.EventType == EET_KEY_INPUT_EVENT) 
 			mKeyIsDown[event.KeyInput.Key] = event.KeyInput.PressedDown; 
+
+		else if (event.EventType == EET_MOUSE_INPUT_EVENT) 
+		{ 
+			//mouse position
+			m_mouseX = event.MouseInput.X; 
+			m_mouseY = event.MouseInput.Y; 
+			m_centerX = ((float)(m_mouseX-m_windowX/2))/((float)(m_windowX));
+			m_centerY = ((float)(m_mouseY-m_windowY/2))/((float)(m_windowY));
+
+			if( event.MouseInput.Event == EMIE_LMOUSE_PRESSED_DOWN)
+			{
+				m_leftmousebutton = true;
+			}    
+			if( event.MouseInput.Event == EMIE_LMOUSE_LEFT_UP)
+			{
+				m_leftmousebutton = false;
+			} 
+		}
+
+		if (event.EventType == EET_GUI_EVENT)
+		{
+			s32 id = event.GUIEvent.Caller->getID();
+			switch(event.GUIEvent.EventType)
+			{
+
+				case EGET_BUTTON_CLICKED:
+
+					if (id == 101)
+					{
+						return true;
+					}
+
+					if (id == 102)
+					{
+						exit(0);
+						return true;
+					}
+					break;
+
+				default:
+					break;
+			}
+		}
 
 		return false;
 	} 
@@ -37,94 +79,68 @@ public:
 		return mKeyIsDown;
 	}
 
+	virtual void setWindowDimension(int x, int y)
+	{
+		m_windowX = x;
+		m_windowY = y;
+	}
+
 	MyEventReceiver()
 	{
 		for(u32 i = 0; i<KEY_KEY_CODES_COUNT; ++i)
 			mKeyIsDown[i] = false;
 	}
-	/*
-	   else if (event.EventType == EET_MOUSE_INPUT_EVENT) 
-	   { 
-	   if( event.MouseInput.Event == EMIE_LMOUSE_PRESSED_DOWN)
-	   {
-	   }    
-	   if( event.MouseInput.Event == EMIE_LMOUSE_LEFT_UP)
-	   {
-	   } 
-	   }
 
-	   if (event.EventType == EET_GUI_EVENT)
-	   {
-	   s32 id = event.GUIEvent.Caller->getID();
-	   if (device == 0)
-	   {
-	   return false;
-	   }    
-	   switch(event.GUIEvent.EventType)
-	   {
-
-	   case EGET_BUTTON_CLICKED:
-
-	   if (id == 101)
-	   {
-	   return true;
-	   }
-
-	   if (id == 102)
-	   {
-	   exit(0);
-	   return true;
-	   }
-	   break;
-
-	   default:
-	   break;
-	   }
-	   }
-
-	   return false; 
-	   }
-	 */
-virtual bool processInput(vector3df& cameraposition, vector3df& camerarotation, bool& debugCamera)
-{
-	if (isKeyDown(KEY_KEY_F))
-		cameraposition.Z += 5; //Forward
-	if (isKeyDown(KEY_KEY_D))
-		cameraposition.Z -= 5; //Backward
-	if (isKeyDown(KEY_KEY_C))
-		cameraposition.Y += 1; //Up
-	if (isKeyDown(KEY_KEY_T))
-		cameraposition.Y -= 1; //Down
-	if (isKeyDown(KEY_KEY_N))
-		cameraposition.X += 1; //Right
-	if (isKeyDown(KEY_KEY_H))
-		cameraposition.X -= 1; //Left
-	if (isKeyDown(KEY_KEY_P))
-		camerarotation.X += 1; //Up
-	if (isKeyDown(KEY_KEY_U))
-		camerarotation.X -= 1; //Down
-	if (isKeyDown(KEY_KEY_I))
-		camerarotation.Z += 1; //Right
-	if (isKeyDown(KEY_KEY_E))
-		camerarotation.Z -= 1; //Left
-	if (isKeyDown(KEY_KEY_G))
+	virtual bool processInput(vector3df& cameraposition, vector3df& camerarotation, bool& debugCamera)
 	{
-		if(!wasPressedLastFrame)
-			debugCamera = debugCamera ? false : true; //Toggle debug mode
-		wasPressedLastFrame = true;
+		if (debugCamera)
+		{
+			if (isKeyDown(KEY_KEY_F))
+				cameraposition.Z += 5; //Forward
+			if (isKeyDown(KEY_KEY_D))
+				cameraposition.Z -= 5; //Backward
+			if (isKeyDown(KEY_KEY_C))
+				cameraposition.Y += 1; //Up
+			if (isKeyDown(KEY_KEY_T))
+				cameraposition.Y -= 1; //Down
+			if (isKeyDown(KEY_KEY_N))
+				cameraposition.X += 1; //Right
+			if (isKeyDown(KEY_KEY_H))
+				cameraposition.X -= 1; //Left
+		}
+		if (isKeyDown(KEY_UP))
+			camerarotation.X += 1; //Up
+		if (isKeyDown(KEY_DOWN))
+			camerarotation.X -= 1; //Down
+		if (isKeyDown(KEY_RIGHT))
+			camerarotation.Z += 1; //Right
+		if (isKeyDown(KEY_LEFT))
+			camerarotation.Z -= 1; //Left
+		if (isKeyDown(KEY_KEY_D))
+		{
+			if(!wasPressedLastFrame)
+				debugCamera = debugCamera ? false : true; //Toggle debug mode
+			wasPressedLastFrame = true;
+		}
+		else
+			wasPressedLastFrame = false;
+
+		if (isKeyDown(KEY_KEY_Q))
+			return true; //Return true to quit
+
+		return false;
 	}
-	else
-		wasPressedLastFrame = false;
-
-	if (isKeyDown(KEY_KEY_Q))
-		return true; //Return true to quit
-
-	return false;
-}
 
 private:
-bool mKeyIsDown[KEY_KEY_CODES_COUNT];
-bool wasPressedLastFrame;
+	bool mKeyIsDown[KEY_KEY_CODES_COUNT];
+	bool wasPressedLastFrame;
+	bool m_leftmousebutton;
+	s32 m_mouseX; 
+	s32 m_mouseY; 
+	float m_centerX;
+	float m_centerY;
+	int m_windowX;
+	int	m_windowY;
 }; 
 
 #endif

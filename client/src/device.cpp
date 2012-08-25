@@ -24,11 +24,14 @@ CDevice::CDevice(MyEventReceiver& receiver)
 
 void CDevice::setupIrrlicht(MyEventReceiver& receiver)
 {
+	receiver.setWindowDimension(windowX, windowY);
+
 	// Create device
 	const dimension2d<u32> windowDimensions(windowX, windowY);
 	m_device = createDevice(video::EDT_OPENGL, windowDimensions, 
 		32, false, true, true, &receiver); 
 	m_device->setResizable(false); 
+	m_device->getCursorControl()->setVisible(false);
 
 	// Check if device could be created. If not, terminate.
 	if (m_device == 0) 
@@ -46,10 +49,10 @@ void CDevice::setupIrrlicht(MyEventReceiver& receiver)
 	/*************
 	  Create the camera
 	 *************/
-	m_cameraNode = m_sceneMgr->addCameraSceneNodeFPS();
+	m_cameraNode = m_sceneMgr->addCameraSceneNode();
 	m_cameraNode->setFOV(PI/2.0f);
-	//m_cameraNode->setPosition(core::vector3df(0.0f,0.0f,-15.0f));
-	//m_cameraLookAtNode = m_sceneMgr->addEmptySceneNode(); //node the camera is set to look at
+	m_cameraNode->setPosition(core::vector3df(0.0f,0.0f, 0.0f));
+	m_cameraLookAtNode = m_sceneMgr->addEmptySceneNode(); //node the camera is set to look at
 
 	/************
 	 * Set up fog

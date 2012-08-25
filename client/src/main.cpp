@@ -24,26 +24,25 @@ using namespace io;
 using namespace gui;
 
 void updateCamera(irr::scene::ICameraSceneNode *camera, 
-	irr::scene::ISceneNode *node,  
+	irr::scene::ISceneNode *lookAtNode,  
 	vector3df offset) 
 { 
 	matrix4 m; 
-	m.setRotationDegrees(node->getRotation()); 
+	m.setRotationDegrees(lookAtNode->getRotation()); 
 
-	vector3df frv = vector3df (0.0f, 0.0f, 1.0f); 
-	m.transformVect(frv); 
+	vector3df forwardVector = vector3df (0.0f, 0.0f, 1.0f); 
+	m.transformVect(forwardVector); //Transform vec by matrix
 
-	vector3df upv = vector3df (0.0f, 1.0f, 0.0f); 
-	m.transformVect(upv); 
+	vector3df upVector = vector3df (0.0f, 1.0f, 0.0f); 
+	m.transformVect(upVector); 
 
 	m.transformVect(offset); 
-
-	offset += node->getPosition(); 
+	offset += lookAtNode->getPosition(); 
 	camera->setPosition(offset); 
 
-	camera->setUpVector(upv); 
+	camera->setUpVector(upVector); 
 
-	offset += frv; 
+	offset += forwardVector; 
 	camera->setTarget(offset); 
 }
 
@@ -135,15 +134,15 @@ int main(int argc, char* argv[])
 				cameraLookAtNode->setPosition(cameraPosition);
 				cameraLookAtNode->setRotation(cameraRotation);
 			}
-			/*
 			else
 			{
-				cameraLookAtNode->setRotation(cameraRotation);
 				cameraLookAtNode->setPosition(player.getPos());
+				cameraLookAtNode->setRotation(cameraRotation);
 				cameraPosition = player.getPos();
-			}*/
-			//updateCamera(deviceSetup.getCameraNode(), cameraLookAtNode, vector3df(0.0f,0.0f,-50.0f));
-			//deviceSetup.getCameraNode()->updateAbsolutePosition();
+			}
+			updateCamera(cameraLookAtNode, deviceSetup.getCameraNode(), vector3df(0.0f,0.0f,25.0f));
+			//updateCamera(deviceSetup.getCameraNode(), cameraLookAtNode, vector3df(0.0f,0.0f,25.0f));
+			deviceSetup.getCameraNode()->updateAbsolutePosition();
 			deviceSetup.getDriver()->beginScene(true, true, SColor(255,100,101,140));
 			deviceSetup.getSceneManager()->drawAll();
 			deviceSetup.getEnv()->drawAll();

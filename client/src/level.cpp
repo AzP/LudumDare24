@@ -7,7 +7,7 @@ CLevel::CLevel(IVideoDriver* driver, ISceneManager* smgr) : mSmgr(smgr)
 	scene::IAnimatedMesh* terrainMesh = mSmgr->getMesh("../media/subdivided_plane.3ds");
 	// scale the mesh by factor 100
 	core::matrix4 m;
-	m.setScale ( core::vector3df(500,1,500) );
+	m.setScale ( core::vector3df(5000,1,5000) );
 	mSmgr->getMeshManipulator()->transformMesh( terrainMesh, m );
 
 	scene::IMesh* tangentMesh;
@@ -45,7 +45,7 @@ CLevel::CLevel(IVideoDriver* driver, ISceneManager* smgr) : mSmgr(smgr)
 			vector3df(2.f, 2.0f, 1.0f)
 			);
 		mWallsBox->setMaterialTexture(0, driver->getTexture("../media/terrain.png"));
-		mWallsBox->setMaterialFlag(video::EMF_LIGHTING, true);
+		mWallsBox->setMaterialFlag(video::EMF_LIGHTING, false);
 		mWallsBox->setMaterialFlag(video::EMF_FOG_ENABLE, true);
 		mWallsBox->setMaterialFlag(video::EMF_NORMALIZE_NORMALS, true);
 		mGround->setMaterialType(video::EMT_SOLID);
