@@ -12,8 +12,8 @@ using namespace irr::video;
 using namespace irr::gui;
 using namespace irr::io;
 
-static const int windowX = 800;
-static const int windowY = 600;
+static const int windowX = 1280;
+static const int windowY = 720;
 
 class CDevice
 {

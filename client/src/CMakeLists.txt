@@ -65,6 +65,8 @@ set(sourcefiles
 	player.cpp
 	level.cpp
 	device.cpp
+	projectile.cpp
+	weapon.cpp
 	)
 
 set (CMAKE_BUILD_TYPE debug)

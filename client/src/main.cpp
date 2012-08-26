@@ -3,6 +3,7 @@
 #include <SDL.h>
 #include <SDL_net.h>
 #include <cassert>
+#include <math.h>
 
 #include "player.h"
 #include "level.h"
@@ -20,37 +21,34 @@ using namespace irr;
 using namespace core;
 using namespace scene;
 using namespace video;
-using namespace io;
 using namespace gui;
 
 void updateCamera(irr::scene::ICameraSceneNode *camera, 
 	irr::scene::ISceneNode *lookAtNode,  
 	vector3df offset) 
 { 
-	matrix4 m; 
-	m.setRotationDegrees(lookAtNode->getRotation()); 
+	/*
+	   vector3df target(
+	   offset.getLength() * cos(lookAtNode->getRotation().X) * sin(lookAtNode->getRotation().Y),
+	   offset.getLength() * sin(lookAtNode->getRotation().X) * sin(lookAtNode->getRotation().Y),
+	   offset.getLength() * cos(lookAtNode->getRotation().Y));
+	   */
 
-	vector3df forwardVector = vector3df (0.0f, 0.0f, 1.0f); 
-	m.transformVect(forwardVector); //Transform vec by matrix
-
-	vector3df upVector = vector3df (0.0f, 1.0f, 0.0f); 
-	m.transformVect(upVector); 
-
-	m.transformVect(offset); 
-	//offset += lookAtNode->getPosition(); 
-	offset += forwardVector; 
-	camera->setTarget(offset); 
+	vector3df upVector = vector3df(0.0f, 1.0f, 0.0f); 
+	camera->setTarget(lookAtNode->getRotation().rotationToDirection()); 
 	camera->setUpVector(upVector); 
 	lookAtNode->setPosition(offset);
 }
 
-void printDebug(CDevice& device, int fps, bool debugCamera,
-	vector3df& cameraRotation, vector3df& cameraPosition)
+void printDebug(CDevice& device, CPlayer& player, int fps, bool debugCamera,
+	const vector3df& cameraRotation, const vector3df& cameraPosition)
 {
 	core::stringw str = L"Alone [";
 	str += device.getDriver()->getName();
 	str += "] FPS:";
 	str += fps;
+	str += "\nFrametime: ";
+	str += device.getFrameTime();
 	str += "\nCameraRotation: ";
 	str += cameraRotation.X;
 	str += ", ";
@@ -65,6 +63,18 @@ void printDebug(CDevice& device, int fps, bool debugCamera,
 	str += cameraPosition.Z;
 	str += "\nDebug camera:";
 	str += debugCamera;
+	str += "\nPlayer Rotation:";
+	str += player.getRotation().X;
+	str += ", ";
+	str += player.getRotation().Y;
+	str += ", ";
+	str += player.getRotation().Z;
+	str += "\nPlayer Position: ";
+	str += player.getPosition().X;
+	str += ", ";
+	str += player.getPosition().Y;
+	str += ", ";
+	str += player.getPosition().Z;
 	device.getFont()->draw(str,
 		core::rect<s32>(30,10,300,90),
 		video::SColor(255,255,255,255));
@@ -90,13 +100,13 @@ int main(int argc, char* argv[])
 	CDevice deviceSetup(receiver);
 
 	//Get camera handle
-	scene::ISceneNode *cameraLookAtNode = deviceSetup.getCameraLookAtNode();
+//	scene::ISceneNode *cameraLookAtNode = deviceSetup.getCameraLookAtNode();
 
 	//Add the level and collision
 	CLevel level(deviceSetup.getDriver(), deviceSetup.getSceneManager());
 
 	//Creates the player
-	CPlayer player = CPlayer(0, 0, deviceSetup.getDevice(), level.getTriangleSelector());
+	CPlayer player = CPlayer(vector3df(0,0,-1), deviceSetup, level.getTriangleSelector());
 
 	/*******************
 	  Creates the other players
@@ -108,7 +118,7 @@ int main(int argc, char* argv[])
 	bool quit;
 	float frametime = 0;
 	bool debugCamera = false;
-	vector3df cameraPosition(0.0f,0.0f,-2.0f);
+	vector3df cameraPosition(0.0f,0.0f,1.0f);
 	vector3df cameraRotation(0.0f,0.0f,0.0f);
 
 #ifdef IRRKLANG
@@ -125,21 +135,30 @@ int main(int argc, char* argv[])
 		{
 			quit = receiver.processInput(cameraPosition, cameraRotation, debugCamera);
 
-			player.update(receiver.getKeys(), deviceSetup.getFrameTime());
+			player.update(deviceSetup, receiver.getKeys(), receiver.getLeftMouseState(), 0.0010);
+
+			deviceSetup.getCameraNode()->updateAbsolutePosition();
 
 			if (debugCamera)
 			{
-				cameraLookAtNode->setPosition(cameraPosition);
-				cameraLookAtNode->setRotation(cameraRotation);
+				//cameraLookAtNode->setPosition(cameraPosition);
+				//cameraLookAtNode->setRotation(cameraRotation);
 			}
 			else
 			{
 				//cameraLookAtNode->setPosition(player.getPos());
-				cameraLookAtNode->setRotation(cameraRotation);
-				cameraPosition = player.getPos();
+				//cameraLookAtNode->setRotation(cameraRotation);
+				//cameraPosition = player.getPosition();
+				vector3df rot = deviceSetup.getCameraNode()->getRotation();
+				if (rot.X > 25.0f)
+					if (abs(rot.X - 25.0f) < abs(rot.X - 310.0f))
+						rot.X = 25.0f;
+					else
+						if (rot.X < 310.0f)
+							rot.X = 310.0f;
+				deviceSetup.getCameraNode()->setRotation(rot);
 			}
-			updateCamera(deviceSetup.getCameraNode(), cameraLookAtNode, vector3df(0.0f,0.0f,25.0f));
-			deviceSetup.getCameraNode()->updateAbsolutePosition();
+			//updateCamera(deviceSetup.getCameraNode(), cameraLookAtNode, vector3df(0.0f,0.0f,10.f));
 			deviceSetup.getDriver()->beginScene(true, true, SColor(255,100,101,140));
 			deviceSetup.getSceneManager()->drawAll();
 			deviceSetup.getEnv()->drawAll();
@@ -147,7 +166,9 @@ int main(int argc, char* argv[])
 			int fps = deviceSetup.getFPS();
 
 			//draw some text
-			printDebug(deviceSetup, fps, debugCamera, cameraRotation, cameraPosition);
+			printDebug(deviceSetup, player, fps, debugCamera,
+				deviceSetup.getCameraNode()->getRotation(),
+				deviceSetup.getCameraNode()->getPosition());
 
 			deviceSetup.getDriver()->endScene();
 			updateTitleBar(fps, lastFPS, deviceSetup);

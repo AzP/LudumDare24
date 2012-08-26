@@ -15,14 +15,14 @@ class CLevel
 public:
 	CLevel(IVideoDriver* driver, ISceneManager*);
 	~CLevel();
-	ITriangleSelector* getTriangleSelector() const { return mWallsBox->getTriangleSelector(); };
-	ISceneNode* getSceneNode() const { return mGround; };
+	ITriangleSelector* getTriangleSelector() const { return m_towerNode->getTriangleSelector(); };
+	ISceneNode* getSceneNode() const { return m_terrain; };
 	void addCollisionDetection(ISceneNode*);
 
 private:
 	ISceneManager* mSmgr;
-	ISceneNode* mGround;
-	IMeshSceneNode* mWallsBox;
+	ITerrainSceneNode* m_terrain;
+	IMeshSceneNode* m_towerNode;
 
 };
 
