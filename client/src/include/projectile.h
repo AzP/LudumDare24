@@ -3,7 +3,10 @@
 
 #include <irrlicht.h>
 
+using namespace irr;
 using namespace irr::core;
+using namespace irr::video;
+using namespace irr::scene;
 
 class CProjectile
 {

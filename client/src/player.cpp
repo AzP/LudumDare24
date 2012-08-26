@@ -125,7 +125,7 @@ void CPlayer::update(CDevice& device, const bool* keys, const bool fire, const f
 		rotate(vector3df(0,-frametime*SPEED,0));
 	if(keys[KEY_KEY_0])
 		mNode->getParent()->setPosition(vector3df(0,0,0));
-
+/*
 	short shotId = -1;
 	if(leftmousebutton)
 	{   
@@ -177,7 +177,7 @@ void CPlayer::update(CDevice& device, const bool* keys, const bool fire, const f
 		}
 	}
 
-	return shotId;
+	return shotId;*/
 }
 
 void CPlayer::move(core::vector3df vel)
