@@ -3,7 +3,7 @@
 #include <SDL.h>
 #include <SDL_net.h>
 #include <cassert>
-#include <math.h>
+#include <cmath>
 
 #include "player.h"
 #include "level.h"
@@ -133,9 +133,10 @@ int main(int argc, char* argv[])
 	{
 		if (device->isWindowActive())
 		{
+			deviceSetup.updateFrameTime();
 			quit = receiver.processInput(cameraPosition, cameraRotation, debugCamera);
 
-			player.update(deviceSetup, receiver.getKeys(), receiver.getLeftMouseState(), 0.0010);
+			player.update(deviceSetup, receiver.getKeys(), receiver.getLeftMouseState(), deviceSetup.getFrameTime());
 
 			deviceSetup.getCameraNode()->updateAbsolutePosition();
 

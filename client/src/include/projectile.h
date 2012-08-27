@@ -3,6 +3,8 @@
 
 #include <irrlicht.h>
 
+class CDevice;
+
 using namespace irr;
 using namespace irr::core;
 using namespace irr::video;
@@ -11,8 +13,8 @@ using namespace irr::scene;
 class CProjectile
 {
 public:
-	CProjectile(vector3df pos, vector3df dir);
-	void update(double elapsedTime);
+	CProjectile(CDevice& device, vector3df pos, vector3df dir, ITriangleSelector* selector);
+	void update(float elapsedTime);
 private:
 	vector3df m_position;
 	vector3df m_direction;

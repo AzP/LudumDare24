@@ -1,4 +1,5 @@
 #include "include/player.h"
+#include "include/weapon.h"
 
 #include <irrlicht.h>
 #include <string>
@@ -7,12 +8,8 @@
 using namespace irr;
 using namespace std;
 
-CPlayer::CPlayer()
-{
-
-}
-
 CPlayer::CPlayer(vector3df position, CDevice& device, scene::ITriangleSelector* selector)
+	: m_weapon(device, selector)
 {
 	IAnimatedMesh* mesh = device.getSceneManager()->getMesh("../media/cannon.3ds");
 	m_cannonTexture = device.getDriver()->getTexture("../media/cannon.png");
@@ -125,28 +122,28 @@ void CPlayer::update(CDevice& device, const bool* keys, const bool fire, const f
 		rotate(vector3df(0,-frametime*SPEED,0));
 	if(keys[KEY_KEY_0])
 		mNode->getParent()->setPosition(vector3df(0,0,0));
-/*
+
 	short shotId = -1;
-	if(leftmousebutton)
+	if(fire)
 	{   
-		shotId = projectile->tryShooting(cameraLookAtNode);
+		shotId = m_weapon.tryShooting(device.getCameraNode()->getTarget());
 		if (shotId >= 0)
 		{
 #ifdef IRRKLANG
-			audioIKSystem.playShotSound();
+	//		audioIKSystem.playShotSound();
 #else
-			audioSystem.playShotSound(1,128,0,0);
+	//		audioSystem.playShotSound(1,128,0,0);
 #endif
 		}
 	} 
 
-	//update ammo 
-	projectile->update(frametime);
+	//update all projectiles fired from the weapon 
+	m_weapon.updateProjectiles(frametime);
 
 	//check collision with the level
-	short collided = projectile->testCollision(worldSelector);
-	hitPlayer = NOHIT;
-
+	//short collided = projectile->testCollision(worldSelector);
+	//hitPlayer = NOHIT;
+/*
 	if (collided >= 0) 
 	{
 		hitPlayer = BUILDINGHIT;

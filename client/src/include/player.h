@@ -5,6 +5,7 @@
 #include <string>
 
 #include "device.h"
+#include "weapon.h"
 
 using namespace irr;
 using namespace irr::video;
@@ -32,9 +33,10 @@ public:
 private:
 	ITexture* m_cannonTexture;
 	scene::ISceneNode* mNode;
+	CWeapon m_weapon;
 	int mPosX, mPosY;
 	vector3df mDirection;
-	static const float SPEED = 300.0f;
+	static constexpr float SPEED = 300.0f;
 };
 
 #endif

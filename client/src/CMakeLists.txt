@@ -69,6 +69,11 @@ set(sourcefiles
 	weapon.cpp
 	)
 
+## Compiler flags
+if(CMAKE_COMPILER_IS_GNUCXX)
+	set(CMAKE_CXX_FLAGS "-std=c++0x") # C++11
+endif()
+
 set (CMAKE_BUILD_TYPE debug)
 add_executable(LudumDare48 ${sourcefiles})
 install_programs(TARGETS LudumDare48 DESTINATION LudumDare48/bin)

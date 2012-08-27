@@ -8,11 +8,10 @@ float CDevice::getFPS()
 	return m_driver->getFPS();
 }
 
-float CDevice::getFrameTime()
+void CDevice::updateFrameTime()
 { 
-	float frametime = (m_timer->getTime() - m_lasttime)/1000.0;
+	m_frametime = (m_timer->getTime() - m_lasttime)/1000.0;
 	m_lasttime = m_timer->getTime();
-	return frametime;
 }
 
 
@@ -60,7 +59,7 @@ void CDevice::setupIrrlicht(MyEventReceiver& receiver)
 	//Setup crosshair
 	scene::ISceneNode* bill = m_sceneMgr->addBillboardSceneNode(
 		m_cameraNode, 
-		dimension2d<f32>(1, 1), vector3df(0,0,10));
+		dimension2d<f32>(0.1, 0.1), vector3df(0,0,1));
 	bill->setMaterialFlag(video::EMF_LIGHTING, false);
 	bill->setMaterialFlag(video::EMF_ZWRITE_ENABLE, true);
 	//bill->setMaterialType(video::EMT_TRANSPARENT_ADD_COLOR);

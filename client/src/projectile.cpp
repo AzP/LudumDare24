@@ -1,12 +1,37 @@
 #include <irrlicht.h>
 
+#include <iostream>
 #include "projectile.h"
+#include "device.h"
 
-CProjectile::CProjectile(vector3df pos, vector3df dir) : m_position(pos), m_direction(dir)
+using namespace std;
+
+CProjectile::CProjectile(CDevice& device, vector3df pos, vector3df dir, ITriangleSelector* selector)
+: m_position(pos), m_direction(dir)
 {
+	IAnimatedMesh* mesh = device.getSceneManager()->getMesh("../media/cannonball.3ds");
+	m_node = device.getSceneManager()->addAnimatedMeshSceneNode(mesh);
+	m_node->setMaterialFlag(video::EMF_LIGHTING, false);
+	//mesh->setMaterialTexture(0, theColors->getBulletTexture(playerId));
+	m_node->setScale ( core::vector3df(0.2,0.2,0.2) );
+	m_node->setVisible(true);  
+
+	scene::ISceneNodeAnimator* anim = device.getSceneManager()->createCollisionResponseAnimator(
+		selector, m_node, core::vector3df(1.0,1.0,1.0), //Size of collision sphere
+		core::vector3df(0,-9,0), //Gravity vector
+		core::vector3df(0,0,0)); //Translation of sphere
+	m_node->addAnimator(anim);
+	anim->drop();
+
+	m_position += m_direction.normalize() * 4.5;
+	m_node->setPosition(m_position);
+	m_node->setRotation(m_direction);
 }
 
-void CProjectile::update(double elapsedTime)
+void CProjectile::update(float elapsedTime)
 {
-
+	//Nice flight!
+	m_position += m_direction * elapsedTime * 120.0;
+	m_node->setPosition(m_position);
+	//std::cerr << "Updated position: " << m_position.X << ", " << m_position.Y << ", " << m_position.Z << std::endl;
 }

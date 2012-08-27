@@ -28,7 +28,8 @@ public:
 	IGUIFont* getFont() const { return m_font; }
 	IGUIEnvironment* getEnv() const { return m_env; }
 	ITimer* getTimer() const { return m_timer; }
-	float getFrameTime();
+	void updateFrameTime();
+	float getFrameTime() const { return m_frametime; }
 	float getFPS();
 
 private:
@@ -42,6 +43,7 @@ private:
 	IGUIFont *m_font;
 	ITimer *m_timer;
 
+	float m_frametime;
 	float m_lasttime;
 };
 #endif
