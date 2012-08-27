@@ -18,7 +18,7 @@ CProjectile::CProjectile(CDevice& device, vector3df pos, vector3df dir, ITriangl
 
 	scene::ISceneNodeAnimator* anim = device.getSceneManager()->createCollisionResponseAnimator(
 		selector, m_node, core::vector3df(1.0,1.0,1.0), //Size of collision sphere
-		core::vector3df(0,-9,0), //Gravity vector
+		core::vector3df(0,9,0), //Gravity vector
 		core::vector3df(0,0,0)); //Translation of sphere
 	m_node->addAnimator(anim);
 	anim->drop();

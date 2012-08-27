@@ -96,7 +96,7 @@ CLevel::CLevel(IVideoDriver* driver, ISceneManager* smgr) : mSmgr(smgr)
 	m_terrain->scaleTexture(1.0f, 5000.0f);
 	m_terrain->setDebugDataVisible(false);
 	// create triangle selector for the terrainMesh
-	scene::ITriangleSelector* selector = mSmgr->createTriangleSelector(m_terrain, 0);
+	scene::ITriangleSelector* selector = mSmgr->createTerrainTriangleSelector(m_terrain, 0);
 	m_terrain->setTriangleSelector(selector);
 	selector->drop();
 	selector = mSmgr->createTriangleSelector(m_towerNode->getMesh(), m_towerNode);

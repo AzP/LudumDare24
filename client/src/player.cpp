@@ -28,13 +28,6 @@ CPlayer::CPlayer(vector3df position, CDevice& device, scene::ITriangleSelector* 
 		mNode->setRotation(vector3df(0,90,0));
 		mNode->setScale ( core::vector3df(0.5,0.5,0.5) );
 	}
-
-	scene::ISceneNodeAnimator* anim = device.getSceneManager()->createCollisionResponseAnimator(
-		selector, mNode, core::vector3df(2.6,2.6,3.8), //Size of collision sphere
-		core::vector3df(0,0,0), //Gravity vector
-		core::vector3df(0,0,0)); //Translation
-	mNode->addAnimator(anim);
-	anim->drop();
 }
 #if 0
 void CPlayer::createNode(IAnimatedMesh* mesh )
