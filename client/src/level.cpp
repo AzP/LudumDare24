@@ -15,7 +15,7 @@ CLevel::CLevel(IVideoDriver* driver, ISceneManager* smgr) : mSmgr(smgr)
 
 	//mSmgr->getMeshManipulator()->makePlanarTextureMapping(terrainMesh, 0.005f);
 	//mSmgr->getMeshManipulator()->recalculateNormals(terrainMesh);
-	video::ITexture* normalMap = driver->getTexture("../media/normalmap.png");
+	video::ITexture* normalMap = driver->getTexture("../media/normalmap.bmp");
 	//if (normalMap)
 	//	driver->makeNormalMapTexture(normalMap, 9.0f);
 
