@@ -40,7 +40,7 @@ bool CProjectile::testCollision(ITriangleSelector* selector)
 {
 	vector3df collisionPoint;
 	core::triangle3df tri;
-	const ISceneNode* hitSceneNode = 0;
+	ISceneNode* hitSceneNode = 0;
 	short collidedShot = -1;
 
 	//Create a line in front of the bullet and 
