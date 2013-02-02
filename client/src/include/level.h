@@ -20,7 +20,9 @@ public:
 	void addCollisionDetection(ISceneNode*);
 
 private:
-	ISceneManager* mSmgr;
+	void setupSkyBox(IVideoDriver* driver);
+
+	ISceneManager* m_smgr;
 	ITerrainSceneNode* m_terrain;
 	IMeshSceneNode* m_towerNode;
 

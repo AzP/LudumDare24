@@ -7,7 +7,7 @@
 using namespace std;
 
 CProjectile::CProjectile(CDevice& device, vector3df pos, vector3df dir, ITriangleSelector* selector)
-: m_position(pos), m_direction(dir)
+: m_collisionMgr(0), m_position(pos), m_direction(dir)
 {
 	IAnimatedMesh* mesh = device.getSceneManager()->getMesh("../media/cannonball.3ds");
 	m_node = device.getSceneManager()->addAnimatedMeshSceneNode(mesh);
@@ -17,7 +17,8 @@ CProjectile::CProjectile(CDevice& device, vector3df pos, vector3df dir, ITriangl
 	m_node->setVisible(true);  
 
 	scene::ISceneNodeAnimator* anim = device.getSceneManager()->createCollisionResponseAnimator(
-		selector, m_node, core::vector3df(1.0,1.0,1.0), //Size of collision sphere
+		selector, m_node,
+		core::vector3df(1.0,1.0,1.0), //Size of collision sphere
 		core::vector3df(0,9,0), //Gravity vector
 		core::vector3df(0,0,0)); //Translation of sphere
 	m_node->addAnimator(anim);
@@ -26,6 +27,13 @@ CProjectile::CProjectile(CDevice& device, vector3df pos, vector3df dir, ITriangl
 	m_position += m_direction.normalize() * 4.5;
 	m_node->setPosition(m_position);
 	m_node->setRotation(m_direction);
+
+	m_collisionMgr = device.getSceneManager()->getSceneCollisionManager();
+}
+
+CProjectile::~CProjectile()
+{
+	std::cerr << "Projectile deleted" << endl;
 }
 
 void CProjectile::update(float elapsedTime)

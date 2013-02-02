@@ -14,6 +14,7 @@ class CProjectile
 {
 public:
 	CProjectile(CDevice& device, vector3df pos, vector3df dir, ITriangleSelector* selector);
+	~CProjectile();
 	void update(float elapsedTime);
 	bool testCollision(ITriangleSelector* selector);
 
