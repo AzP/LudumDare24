@@ -21,3 +21,17 @@ void CWeapon::updateProjectiles(float elapsedTime)
 
 
 }
+
+bool CWeapon::testCollision(ITriangleSelector* selector)
+{
+	for(auto p = m_firedProjectiles.begin(); p != m_firedProjectiles.end(); ++p)
+	{
+		if ((*p)->testCollision(selector))
+		{
+			p = m_firedProjectiles.erase(p);
+			--p;
+		}
+
+	}
+
+}

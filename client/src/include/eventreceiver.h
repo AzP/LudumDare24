@@ -16,6 +16,7 @@ class MyEventReceiver : public IEventReceiver
 public: 
 
 	MyEventReceiver()
+		: wasPressedLastFrame(0), m_leftmousebutton(0), m_mouseX(0), m_mouseY(0), m_centerX(0), m_centerY(0), m_windowX(0), m_windowY(0)
 	{
 		for(u32 i = 0; i<irr::KEY_KEY_CODES_COUNT; ++i)
 			mKeyIsDown[i] = false;

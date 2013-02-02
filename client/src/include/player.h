@@ -33,6 +33,7 @@ public:
 private:
 	ITexture* m_cannonTexture;
 	scene::ISceneNode* mNode;
+	ITriangleSelector* m_terrainSelector;
 	CWeapon m_weapon;
 	int mPosX, mPosY;
 	vector3df mDirection;

@@ -9,7 +9,7 @@ using namespace irr;
 using namespace std;
 
 CPlayer::CPlayer(vector3df position, CDevice& device, scene::ITriangleSelector* selector)
-	: m_weapon(device, selector)
+	: m_terrainSelector(selector), m_weapon(device, selector)
 {
 	IAnimatedMesh* mesh = device.getSceneManager()->getMesh("../media/cannon.3ds");
 	m_cannonTexture = device.getDriver()->getTexture("../media/cannon.png");
@@ -134,7 +134,7 @@ void CPlayer::update(CDevice& device, const bool* keys, const bool fire, const f
 	m_weapon.updateProjectiles(frametime);
 
 	//check collision with the level
-	//short collided = projectile->testCollision(worldSelector);
+	short collided = m_weapon.testCollision(m_terrainSelector);
 	//hitPlayer = NOHIT;
 /*
 	if (collided >= 0) 

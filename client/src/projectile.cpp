@@ -35,3 +35,20 @@ void CProjectile::update(float elapsedTime)
 	m_node->setPosition(m_position);
 	//std::cerr << "Updated position: " << m_position.X << ", " << m_position.Y << ", " << m_position.Z << std::endl;
 }
+
+bool CProjectile::testCollision(ITriangleSelector* selector)
+{
+	vector3df collisionPoint;
+	core::triangle3df tri;
+	const ISceneNode* hitSceneNode = 0;
+	short collidedShot = -1;
+
+	//Create a line in front of the bullet and 
+	//check for collision between it and the selector
+	core::line3d<f32> line;
+	line.start = m_position;
+	line.end =  m_position + m_direction*5;
+
+	bool collided = m_collisionMgr->getCollisionPoint(line, selector, collisionPoint, tri, hitSceneNode);
+	return collided;
+}
