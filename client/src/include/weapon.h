@@ -22,6 +22,7 @@ private:
 	ITriangleSelector* m_terrainSelector;
 	ISceneCollisionManager* m_collisionMgr;
 
+	float m_rechargeTime;
 };
 
 #endif

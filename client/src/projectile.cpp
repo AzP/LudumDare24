@@ -19,7 +19,7 @@ CProjectile::CProjectile(CDevice& device, vector3df pos, vector3df dir, ITriangl
 	scene::ISceneNodeAnimator* anim = device.getSceneManager()->createCollisionResponseAnimator(
 		selector, m_node,
 		core::vector3df(1.0,1.0,1.0), //Size of collision sphere
-		core::vector3df(0,9,0), //Gravity vector
+		core::vector3df(0,0,0), //Gravity vector
 		core::vector3df(0,0,0)); //Translation of sphere
 	m_node->addAnimator(anim);
 	anim->drop();
@@ -33,13 +33,14 @@ CProjectile::CProjectile(CDevice& device, vector3df pos, vector3df dir, ITriangl
 
 CProjectile::~CProjectile()
 {
+	m_node->remove();
 	std::cerr << "Projectile deleted" << endl;
 }
 
 void CProjectile::update(float elapsedTime)
 {
 	//Nice flight!
-	m_position += m_direction * elapsedTime * 120.0;
+	m_position += m_direction * elapsedTime * 50.0;
 	m_node->setPosition(m_position);
 	//std::cerr << "Updated position: " << m_position.X << ", " << m_position.Y << ", " << m_position.Z << std::endl;
 }
@@ -49,7 +50,6 @@ bool CProjectile::testCollision(ITriangleSelector* selector)
 	vector3df collisionPoint;
 	core::triangle3df tri;
 	ISceneNode* hitSceneNode = 0;
-	short collidedShot = -1;
 
 	//Create a line in front of the bullet and 
 	//check for collision between it and the selector

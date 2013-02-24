@@ -79,9 +79,10 @@ void CLevel::addCollisionDetection(ISceneNode* node)
 {
 	// create collision response animator and attach it to the node
 	scene::ISceneNodeAnimator* anim = m_smgr->createCollisionResponseAnimator(
-		m_terrain->getTriangleSelector(), node, core::vector3df(1,1,1),
-		core::vector3df(0,0,10),
-		core::vector3df(0,0,0));
+		m_terrain->getTriangleSelector(), node,
+		core::vector3df(1,1,1), //Size of sphere
+		core::vector3df(0,0,0),//Gravity
+		core::vector3df(0,0,0));//Translation
 	node->addAnimator(anim);
 	anim->drop();
 	anim = m_smgr->createCollisionResponseAnimator(

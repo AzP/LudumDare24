@@ -15,7 +15,7 @@ class CLevel
 public:
 	CLevel(IVideoDriver* driver, ISceneManager*);
 	~CLevel();
-	ITriangleSelector* getTriangleSelector() const { return m_towerNode->getTriangleSelector(); };
+	ITriangleSelector* getTriangleSelector() const { return m_terrain->getTriangleSelector(); };
 	ISceneNode* getSceneNode() const { return m_terrain; };
 	void addCollisionDetection(ISceneNode*);
 

@@ -8,7 +8,7 @@ BUILDINGHIT	include/constants.h	/^	BUILDINGHIT = -1,$/;"	e	enum:SHOTCOLLISION
 CDevice	device.cpp	/^CDevice::CDevice(MyEventReceiver& receiver)$/;"	f	class:CDevice
 CDevice	include/device.h	/^class CDevice$/;"	c
 CLevel	include/level.h	/^class CLevel$/;"	c
-CLevel	level.cpp	/^CLevel::CLevel(IVideoDriver* driver, ISceneManager* smgr) : mSmgr(smgr)$/;"	f	class:CLevel
+CLevel	level.cpp	/^CLevel::CLevel(IVideoDriver* driver, ISceneManager* smgr) : m_smgr(smgr)$/;"	f	class:CLevel
 CONSTANTS_H	include/constants.h	4;"	d
 CPlayer	include/player.h	/^class CPlayer {$/;"	c
 CPlayer	player.cpp	/^CPlayer::CPlayer(vector3df position, CDevice& device, scene::ITriangleSelector* selector)$/;"	f	class:CPlayer
@@ -70,7 +70,6 @@ mKeyIsDown	include/eventreceiver.h	/^	bool mKeyIsDown[irr::KEY_KEY_CODES_COUNT];
 mNode	include/player.h	/^	scene::ISceneNode* mNode;$/;"	m	class:CPlayer
 mPosX	include/player.h	/^	int mPosX, mPosY;$/;"	m	class:CPlayer
 mPosY	include/player.h	/^	int mPosX, mPosY;$/;"	m	class:CPlayer
-mSmgr	include/level.h	/^	ISceneManager* mSmgr;$/;"	m	class:CLevel
 m_cameraLookAtNode	include/device.h	/^	ISceneNode *m_cameraLookAtNode;$/;"	m	class:CDevice
 m_cameraNode	include/device.h	/^	ICameraSceneNode *m_cameraNode;$/;"	m	class:CDevice
 m_cannonTexture	include/player.h	/^	ITexture* m_cannonTexture;$/;"	m	class:CPlayer
@@ -93,6 +92,7 @@ m_mouseY	include/eventreceiver.h	/^	s32 m_mouseY; $/;"	m	class:MyEventReceiver
 m_node	include/projectile.h	/^	ISceneNode* m_node;$/;"	m	class:CProjectile
 m_position	include/projectile.h	/^	vector3df m_position;$/;"	m	class:CProjectile
 m_sceneMgr	include/device.h	/^	ISceneManager* m_sceneMgr;$/;"	m	class:CDevice
+m_smgr	include/level.h	/^	ISceneManager* m_smgr;$/;"	m	class:CLevel
 m_terrain	include/level.h	/^	ITerrainSceneNode* m_terrain;$/;"	m	class:CLevel
 m_terrainSelector	include/player.h	/^	ITriangleSelector* m_terrainSelector;$/;"	m	class:CPlayer
 m_terrainSelector	include/weapon.h	/^	ITriangleSelector* m_terrainSelector;$/;"	m	class:CWeapon
@@ -110,6 +110,7 @@ setPosition	player.cpp	/^void CPlayer::setPosition(vector3df pos)$/;"	f	class:CP
 setRotation	player.cpp	/^void CPlayer::setRotation(vector3df rot)$/;"	f	class:CPlayer
 setWindowDimension	include/eventreceiver.h	/^	virtual void setWindowDimension(int x, int y) { m_windowX = x; m_windowY = y; }$/;"	f	class:MyEventReceiver
 setupIrrlicht	device.cpp	/^void CDevice::setupIrrlicht(MyEventReceiver& receiver)$/;"	f	class:CDevice
+setupSkyBox	level.cpp	/^void CLevel::setupSkyBox(IVideoDriver* driver)$/;"	f	class:CLevel
 testCollision	projectile.cpp	/^bool CProjectile::testCollision(ITriangleSelector* selector)$/;"	f	class:CProjectile
 testCollision	weapon.cpp	/^bool CWeapon::testCollision(ITriangleSelector* selector)$/;"	f	class:CWeapon
 tryShooting	weapon.cpp	/^bool CWeapon::tryShooting(vector3df direction)$/;"	f	class:CWeapon
@@ -124,3 +125,4 @@ windowX	include/device.h	/^static const int windowX = 1280;$/;"	v
 windowY	include/device.h	/^static const int windowY = 720;$/;"	v
 ~CLevel	level.cpp	/^CLevel::~CLevel()$/;"	f	class:CLevel
 ~CPlayer	player.cpp	/^CPlayer::~CPlayer()$/;"	f	class:CPlayer
+~CProjectile	projectile.cpp	/^CProjectile::~CProjectile()$/;"	f	class:CProjectile
