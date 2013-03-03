@@ -2,6 +2,7 @@
 #define WEAPON_H
 
 #include "projectile.h"
+#include "particleSystem.h"
 
 #include <irrlicht.h>
 #include <vector>
@@ -17,8 +18,11 @@ public:
 	bool testCollision(ITriangleSelector* selector);
 
 private:
+	void createExplosion();
+
 	std::vector<CProjectile*> m_firedProjectiles;
 	CDevice& m_device;
+	CParticleSystem m_particleSystem;
 	ITriangleSelector* m_terrainSelector;
 	ISceneCollisionManager* m_collisionMgr;
 

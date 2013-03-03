@@ -6,7 +6,8 @@
 using namespace std;
 
 CWeapon::CWeapon(CDevice& device, ITriangleSelector* selector)
-	: m_device(device), m_terrainSelector(selector), m_rechargeTime(0)
+: m_device(device), m_terrainSelector(selector), m_rechargeTime(0)
+	, m_particleSystem(device, selector)
 {
 }
 
@@ -35,11 +36,13 @@ bool CWeapon::testCollision(ITriangleSelector* selector)
 {
 	for(auto p = m_firedProjectiles.begin(); p != m_firedProjectiles.end(); )
 	{
-		if ((*p)->testCollision(selector))
+		vector3df collisionPoint;
+		if ((*p)->testCollision(selector, collisionPoint))
 		{
 			cerr << "Collision detected" << endl;
 			delete *p;
 			p = m_firedProjectiles.erase(p);
+			m_particleSystem.createExplosion(collisionPoint);
 		}
 		else
 			++p;

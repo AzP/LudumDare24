@@ -67,6 +67,7 @@ set(sourcefiles
 	device.cpp
 	projectile.cpp
 	weapon.cpp
+	particleSystem.cpp
 	)
 
 ## Compiler flags

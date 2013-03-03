@@ -12,7 +12,6 @@ CProjectile::CProjectile(CDevice& device, vector3df pos, vector3df dir, ITriangl
 	IAnimatedMesh* mesh = device.getSceneManager()->getMesh("../media/cannonball.3ds");
 	m_node = device.getSceneManager()->addAnimatedMeshSceneNode(mesh);
 	m_node->setMaterialFlag(video::EMF_LIGHTING, false);
-	//mesh->setMaterialTexture(0, theColors->getBulletTexture(playerId));
 	m_node->setScale ( core::vector3df(0.2,0.2,0.2) );
 	m_node->setVisible(true);  
 
@@ -45,9 +44,8 @@ void CProjectile::update(float elapsedTime)
 	//std::cerr << "Updated position: " << m_position.X << ", " << m_position.Y << ", " << m_position.Z << std::endl;
 }
 
-bool CProjectile::testCollision(ITriangleSelector* selector)
+bool CProjectile::testCollision(ITriangleSelector* selector, vector3df& collisionPoint)
 {
-	vector3df collisionPoint;
 	core::triangle3df tri;
 	ISceneNode* hitSceneNode = 0;
 
